@@ -51,8 +51,13 @@ img {
 }
 
 .brand {
-  font-weight: 700;
-  font-size: 18px;
+  font-weight: 800;
+  font-size: 21px;
+  letter-spacing: 1px;
+  background-color: #75bb75;
+  border-color: var(--accent);
+  border-radius: 8px;
+  border: 2px solid;
 }
 
 .hidden {
@@ -67,8 +72,8 @@ img {
 
 .nav-btn {
   background: transparent;
-  border: 1px solid rgba(255,255,255,0.05);
-  padding: 8px 12px;
+  border: 2px solid;
+  padding: 4px 6px;
   border-radius: 8px;
   color: var(--muted);
   cursor: pointer;
@@ -91,13 +96,6 @@ img {
   color: inherit;
 }
 
-/* .calendar-hero {
-  display: flex;
-  justify-content: center;
-  margin: 8px 0 18px;
-  padding: 0 12px;
-} */
-
 .calendar-image {
   width: 100%;
   max-width: 820px;
@@ -109,30 +107,27 @@ img {
 }
 
 /* Overlay posicionado sobre a imagem do calendário */
-/* .calendar-hero {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 8px 0 18px;
-  padding: 0 12px;
-} */
+.calendar-hero { 
+  position: relative; 
+  display:flex; 
+  justify-content:center; 
+  align-items:center; 
+}
 
-.calendar-hero { position: relative; display:flex; justify-content:center; align-items:center; }
 .calendar-overlay {
   position: absolute;
-  inset: 0;                 /* preenche todo o .calendar-hero */
-  pointer-events: none;     /* os botões individuais terão pointer-events:auto */
+  inset: 0;
+  pointer-events: none;
   box-sizing: border-box;
   z-index: 10;
 }
 
-/* cada botão irá ser posicionado em absolute pelo JS */
+/* Cada botão de dia */
 .calendar-overlay .day {
   position: absolute;
-  transform: translate(-50%, -50%); /* centra no ponto (left,top) atribuído pelo JS */
+  transform: translate(-50%, -50%);
   pointer-events: auto;
-  width: 12%;               /* tamanho base; o JS também pode ajustar inline */
+  width: 12%;
   min-width: 48px;
   max-width: 84px;
   height: auto;
@@ -143,9 +138,14 @@ img {
   justify-content:center;
   border-radius:8px;
   background: transparent;
-  box-shadow: transparent;
-  border: transparent;
+  box-shadow: none;
+  border: none;
   text-align:center;
+  cursor: pointer;
+}
+
+.calendar-overlay .day.locked {
+  cursor: default;
 }
 
 /* badges dentro dos quadrados (Pai Natal / miniatura) */
@@ -159,16 +159,6 @@ img {
   pointer-events: none;
   border-radius: 6px;
 }
-
-/* responsividade — em ecrãs pequenos usa 4 colunas */
-@media (max-width: 640px) {
-  .calendar-overlay {
-    grid-template-columns: repeat(4, 1fr);
-    padding: 18px;
-  }
-  .calendar-overlay .day { min-height:48px; }
-}
-
 
 /* 4. Views */
 .view {
@@ -201,12 +191,11 @@ img {
   padding: 8px 10px;
   border-radius: 8px;
   cursor: pointer;
-  transition: transform 0.15s ease, opacity 0.15s ease;
+  transition: opacity 0.15s ease;
 }
 
 .btn:hover {
-  transform: translateY(-1px);
-  opacity: 0.95;
+  opacity: 0.9;
 }
 
 .btn.ghost {
@@ -361,7 +350,7 @@ img {
   object-fit: contain;
   margin-top: 6px;
   border-radius: 8px;
-  pointer-events: none; /* para o clique ir para o botão pai, não para a imagem */
+  pointer-events: none;
 }
 
 /* 9. Responsividade */
@@ -373,4 +362,70 @@ img {
     flex-direction: column;
     gap: 8px;
   }
+}
+
+/* ======= Ajustes responsivos extra para telemóveis ======= */
+@media (max-width: 900px) {
+  .calendar-overlay {
+    padding: 28px;
+  }
+
+  .calendar-overlay .day {
+    width: 14%;
+    min-width: 36px;
+    max-width: 72px;
+    padding: 6px;
+    border-radius: 6px;
+  }
+
+  .calendar-overlay .day .num { font-size: 18px; }
+  .calendar-overlay .day .label { font-size: 11px; }
+  .calendar-overlay .day-badge,
+  .calendar-overlay .day-thumb { width: 48%; max-width: 56px; }
+}
+
+@media (max-width: 600px) {
+  .calendar-overlay {
+    padding: 14px;
+  }
+
+  .calendar-overlay .day {
+    width: 18%;
+    min-width: 40px;
+    max-width: 64px;
+    padding: 6px 4px;
+    border-radius: 6px;
+  }
+
+  .calendar-overlay .day .num { font-size: 16px; }
+  .calendar-overlay .day .label { display: none; }
+
+  .calendar-overlay .day-badge,
+  .calendar-overlay .day-thumb { width: 42%; max-width: 48px; }
+
+  .today-message {
+    font-size: 1rem;
+    padding: 6px 10px;
+  }
+}
+
+@media (max-width: 380px) {
+  .calendar-overlay .day { width: 20%; min-width: 34px; max-width: 56px; padding: 5px; }
+  .calendar-overlay { padding: 10px; }
+  .day-badge, .day-thumb { width: 40%; max-width: 44px; }
+  .today-message { font-size: 0.95rem; padding: 6px 8px; }
+}
+
+@media (orientation: landscape) and (max-width: 900px) {
+  .calendar-overlay { padding-left: 12px; padding-right: 12px; }
+  .calendar-overlay .day { width: 12%; min-width: 36px; }
+}
+
+/* Área clicável maior para toque */
+.calendar-overlay .day::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 10px;
+  pointer-events: none;
 }

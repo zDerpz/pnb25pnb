@@ -99,7 +99,7 @@
     btn.setAttribute('aria-label', `Dia ${day} — dezembro`);
 
 
-    if (day <= unlockedCount) {
+    if (day == unlockedCount) {
       btn.classList.add('unlocked');
       btn.title = `Abrir foto do dia ${day}`;
 
