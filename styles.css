@@ -52,7 +52,7 @@ img {
 
 .brand {
   font-weight: 800;
-  font-size: 21px;
+  font-size: 23px;
   letter-spacing: 1px;
   background-color: #75bb75;
   border-color: var(--accent);
@@ -353,36 +353,52 @@ img {
   pointer-events: none;
 }
 
-/* 9. Responsividade */
-@media (max-width: 600px) {
-  .grid {
-    grid-template-columns: repeat(4, 1fr);
-  }
-  .site-header {
-    flex-direction: column;
-    gap: 8px;
-  }
+/* Área clicável maior para toque */
+.calendar-overlay .day::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 10px;
+  pointer-events: none;
 }
 
-/* ======= Ajustes responsivos extra para telemóveis ======= */
-@media (max-width: 900px) {
-  .calendar-overlay {
-    padding: 28px;
-  }
-
-  .calendar-overlay .day {
-    width: 14%;
-    min-width: 36px;
-    max-width: 72px;
-    padding: 6px;
-    border-radius: 6px;
-  }
-
-  .calendar-overlay .day .num { font-size: 18px; }
-  .calendar-overlay .day .label { font-size: 11px; }
-  .calendar-overlay .day-badge,
-  .calendar-overlay .day-thumb { width: 48%; max-width: 56px; }
+#snowfall {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 500; /* abaixo do modal (999) */
+  overflow: hidden;
 }
+
+/* base de cada floco */
+.snowflake {
+  position: absolute;
+  top: -10%;
+  color: #fff;
+  font-size: var(--flake-size);
+  opacity: 0.9;
+  filter: drop-shadow(0 2px 3px rgba(0,0,0,0.15));
+  will-change: transform, opacity;
+  user-select: none;
+}
+
+/* animações */
+@keyframes snowFall {
+  0%   { transform: translateY(-10vh) rotate(0deg); opacity: 0; }
+  10%  { opacity: 0.8; }
+  90%  { opacity: 1; }
+  100% { transform: translateY(110vh) rotate(360deg); opacity: 0.9; }
+}
+
+@keyframes snowDrift {
+  0%   { transform: translateX(0); }
+  50%  { transform: translateX(14px); }
+  100% { transform: translateX(0); }
+}
+
+.snowflake.s-low   { animation: snowFall var(--fall-dur) linear var(--fall-delay) forwards; }
+.snowflake.s-drift { animation: snowFall var(--fall-dur) linear var(--fall-delay) forwards, snowDrift var(--drift-dur) ease-in-out var(--drift-delay) infinite; }
+.snowflake.s-fade  { opacity: 0.8; transition: opacity 2s; }
 
 @media (max-width: 600px) {
   .calendar-overlay {
@@ -396,6 +412,20 @@ img {
     padding: 6px 4px;
     border-radius: 6px;
   }
+
+  .brand {
+    font-size: 18px;
+  }
+
+  .grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .site-header {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .snowflake { filter: none; opacity: 0.9; }
 
   .calendar-overlay .day .num { font-size: 16px; }
   .calendar-overlay .day .label { display: none; }
@@ -416,16 +446,26 @@ img {
   .today-message { font-size: 0.95rem; padding: 6px 8px; }
 }
 
+@media (max-width: 900px) {
+  .calendar-overlay {
+    padding: 28px;
+  }
+
+  .calendar-overlay .day {
+    width: 14%;
+    min-width: 36px;
+    max-width: 72px;
+    padding: 6px;
+    border-radius: 6px;
+  }
+
+  .calendar-overlay .day .num { font-size: 18px; }
+  .calendar-overlay .day .label { font-size: 11px; }
+  .calendar-overlay .day-badge,
+  .calendar-overlay .day-thumb { width: 48%; max-width: 56px; }
+}
+
 @media (orientation: landscape) and (max-width: 900px) {
   .calendar-overlay { padding-left: 12px; padding-right: 12px; }
   .calendar-overlay .day { width: 12%; min-width: 36px; }
-}
-
-/* Área clicável maior para toque */
-.calendar-overlay .day::after {
-  content: '';
-  position: absolute;
-  inset: -6px;
-  border-radius: 10px;
-  pointer-events: none;
 }
