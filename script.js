@@ -2,6 +2,8 @@
    - calcula posições percentuais para cada dia numa grelha COLS x ROWS
    - podes ajustar CALENDAR_COLS / CALENDAR_ROWS / OVERLAY_PADDING_PX / DAY_WIDTH_PERCENT
    - mantém modal, preload e controles de teste
+   - ADIÇÃO: suporte a offsets específicos para telemóvel (row_x_offsets_tel / col_x_offsets_tel)
+           e deteção simples phone vs pc
 */
 
 (() => {
@@ -18,9 +20,16 @@
   const CALENDAR_ROWS = 5;     // linhas visíveis na imagem
   const OVERLAY_PADDING_PX = 130; // distância em px entre a moldura da imagem e a grelha
   const DAY_WIDTH_PERCENT = 12;  // largura do botão em % do overlay (ajusta para caber)
-  // Offsets por linha/coluna se precisares de ajustes finos (em pixels)
+
+  // Offsets por linha/coluna se precisares de ajustes finos (em pixels) - PC
   const ROW_Y_OFFSETS_PX = [210, 180, 150, 120, 90]; // length = CALENDAR_ROWS
   const COL_X_OFFSETS_PX = [-12, -5, 0, 5, 12]; // length = CALENDAR_COLS
+
+  // ---------- NOVO: Offsets para TELEFONE ----------
+  // nomes exactos solicitados: row_x_offsets_tel e col_x_offsets_tel
+  // ajustei/escalei os valores PC como base — podes afinar depois
+  const row_x_offsets_tel = [75, 80, 80, 85, 85]; // valores em px para cada linha em mobile
+  const col_x_offsets_tel = [-84, -42, 0, 42, 84];     // valores em px para cada coluna em mobile
 
   /* ---------------- SELECTORS ---------------- */
   const IDS = {
@@ -64,6 +73,12 @@
     return { month: now.getMonth(), day: now.getDate(), source: 'real' };
   }
 
+  /* ---------------- Device detection (phone vs pc) ---------------- */
+  // função simples que devolve true se for telemóvel (baseado em largura)
+  function isPhone() {
+    return window.matchMedia && window.matchMedia('(max-width: 600px)').matches;
+  }
+
   /* ---------------- Overlay creation / wait ---------------- */
   function ensureOverlayExists() {
     overlayEl = document.querySelector(IDS.overlay);
@@ -98,14 +113,14 @@
     btn.setAttribute('data-day', String(day));
     btn.setAttribute('aria-label', `Dia ${day} — dezembro`);
 
-
-    if (day == unlockedCount) {
+    if (day == unlockedCount && unlockedCount > 0) {
       btn.classList.add('unlocked');
       btn.title = `Abrir foto do dia ${day}`;
 
       const badge = document.createElement('img');
       badge.className = 'day-badge';
       badge.alt = '';
+      // tenta carregar primeiro o ícone do Pai Natal; se falhar, usa a imagem do dia
       badge.src = SANTA_IMAGE;
       badge.onerror = function () {
         badge.onerror = null;
@@ -128,38 +143,39 @@
 
   /* ---------------- Posicionamento automático (percentual) ---------------- */
   function renderOverlayGrid() {
-  overlayEl = ensureOverlayExists();
-  if (!overlayEl) return;
+    overlayEl = ensureOverlayExists();
+    if (!overlayEl) return;
 
-  overlayEl.innerHTML = '';
+    overlayEl.innerHTML = '';
 
-  const unlocked = (currentDate.month === 11) ? currentDate.day : 0;
+    // unlocked apenas se for dezembro
+    const unlocked = (currentDate.month === 11) ? currentDate.day : 0;
 
-  // Cria ou atualiza a mensagem do dia atual
-  const msgId = 'todayMessage';
-  let msg = document.getElementById(msgId);
-  if (!msg) {
-    msg = document.createElement('div');
-    msg.id = msgId;
-    msg.className = 'today-message';
-    overlayEl.parentElement.insertBefore(msg, overlayEl);
+    // Cria ou atualiza a mensagem do dia atual
+    const msgId = 'todayMessage';
+    let msg = document.getElementById(msgId);
+    if (!msg) {
+      msg = document.createElement('div');
+      msg.id = msgId;
+      msg.className = 'today-message';
+      overlayEl.parentElement.insertBefore(msg, overlayEl);
+    }
+
+    if (currentDate.month === 11 && unlocked > 0) {
+      msg.textContent = `🎄 Hoje é dia ${unlocked} de dezembro!`;
+      msg.style.display = 'block';
+    } else {
+      msg.textContent = '';
+      msg.style.display = 'none';
+    }
+
+    // Renderiza os quadradinhos do calendário (posição em fluxo; este é fallback)
+    for (let i = 1; i <= TOTAL_DAYS; i++) {
+      overlayEl.appendChild(createOverlayDay(i, unlocked));
+    }
+
+    preloadUnlockedImages(unlocked);
   }
-
-  if (currentDate.month === 11 && unlocked > 0) {
-    msg.textContent = `🎄 Hoje é dia ${unlocked} de dezembro!`;
-    msg.style.display = 'block';
-  } else {
-    msg.textContent = '';
-    msg.style.display = 'none';
-  }
-
-  // Renderiza os quadradinhos do calendário
-  for (let i = 1; i <= TOTAL_DAYS; i++) {
-    overlayEl.appendChild(createOverlayDay(i, unlocked));
-  }
-
-  preloadUnlockedImages(unlocked);
-}
 
   /* ---------------- Preload ---------------- */
   function preloadUnlockedImages(unlocked) {
@@ -273,16 +289,11 @@
   // util wrapper to call function named earlier
   function renderOverlayGridPositioned() {
     // this simply calls the positioned render; done to keep function name consistent
-    // main implementation is above
     renderOverlayGridPositioned_impl();
   }
 
   // Implementation separated to avoid hoisting confusion in some environments
   function renderOverlayGridPositioned_impl() {
-    // actual function defined earlier as renderOverlayGridPositioned
-    // but we need the implementation body here - call the prior implementation
-    // We'll simply call the earlier named function by inlining its logic:
-    // (To avoid confusion, call the main renderer we wrote earlier: renderOverlayGridPositionedMain)
     renderOverlayGridPositionedMain();
   }
 
@@ -296,6 +307,11 @@
     const rect = overlayEl.getBoundingClientRect();
     const contW = rect.width || (calendarImgEl ? calendarImgEl.clientWidth : 0);
     const contH = rect.height || (calendarImgEl ? calendarImgEl.clientHeight : 0);
+
+    // escolhe offsets conforme dispositivo (PC vs PHONE)
+    const phone = isPhone(); // true se for telemóvel
+    const ROW_OFF = phone ? row_x_offsets_tel : ROW_Y_OFFSETS_PX;
+    const COL_OFF = phone ? col_x_offsets_tel : COL_X_OFFSETS_PX;
 
     const pad = OVERLAY_PADDING_PX;
     const usableW = Math.max(0, contW - pad * 2);
@@ -311,8 +327,8 @@
       const cellW = usableW / CALENDAR_COLS;
       const cellH = usableH / CALENDAR_ROWS;
 
-      const centerXpx = pad + (col + 0.5) * cellW + (COL_X_OFFSETS_PX[col] || 0);
-      const centerYpx = pad + (row + 0.5) * cellH + (ROW_Y_OFFSETS_PX[row] || 0);
+      const centerXpx = pad + (col + 0.5) * cellW + (COL_OFF[col] || 0);
+      const centerYpx = pad + (row + 0.5) * cellH + (ROW_OFF[row] || 0);
 
       const leftPct = contW ? (centerXpx / contW) * 100 : 0;
       const topPct = contH ? (centerYpx / contH) * 100 : 0;
@@ -346,8 +362,8 @@
     renderOverlayGridPositionedMain,
     openImageModal,
     closeImageModal,
-    currentDate
+    currentDate,
+    isPhone // expose for debug
   };
 
 })();
-// 

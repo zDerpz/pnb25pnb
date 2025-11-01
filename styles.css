@@ -28,6 +28,16 @@ img {
   display: block;
 }
 
+header {
+    background: rgba(0, 0, 0, 0.92);
+    padding: 20px 0;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 5px 20px rgba(31, 31, 31, 0.5);
+}
+
 .today-message {
   text-align: center;
   font-size: 1.3rem;
@@ -252,7 +262,7 @@ img {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(2,6,23,0.85);
+  background: rgba(255, 255, 255, 0.85);
   padding: 20px;
   z-index: 999;
   opacity: 0;
@@ -399,6 +409,22 @@ img {
 .snowflake.s-low   { animation: snowFall var(--fall-dur) linear var(--fall-delay) forwards; }
 .snowflake.s-drift { animation: snowFall var(--fall-dur) linear var(--fall-delay) forwards, snowDrift var(--drift-dur) ease-in-out var(--drift-delay) infinite; }
 .snowflake.s-fade  { opacity: 0.8; transition: opacity 2s; }
+
+/* Ajustes responsivos extras para o overlay do calendário */
+.calendar-overlay {
+  padding: 28px; /* default */
+}
+
+/* menos padding e espaço em telemóveis para evitar overflow */
+@media (max-width: 900px) {
+  .calendar-overlay { padding: 18px; }
+}
+
+@media (max-width: 600px) {
+  .calendar-overlay { padding: 10px; }
+  /* esconder label se necessário (economiza espaço) */
+  .calendar-overlay .label { display: none; }
+}
 
 @media (max-width: 600px) {
   .calendar-overlay {
