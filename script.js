@@ -28,8 +28,8 @@
   // ---------- NOVO: Offsets para TELEFONE ----------
   // nomes exactos solicitados: row_x_offsets_tel e col_x_offsets_tel
   // ajustei/escalei os valores PC como base — podes afinar depois
-  const row_x_offsets_tel = [70, 78, 85, 92, 100]; // valores em px para cada linha em mobile
-  const col_x_offsets_tel = [-85, -42, 0, 43, 85];     // valores em px para cada coluna em mobile
+  const row_x_offsets_tel = [27, 78, 85, 92, 100]; // valores em px para cada linha em mobile
+  const col_x_offsets_tel = [-89, -42, 0, 43, 85];     // valores em px para cada coluna em mobile
 
   /* ---------------- SELECTORS ---------------- */
   const IDS = {
