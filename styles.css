@@ -147,7 +147,7 @@ header {
   align-items:center;
   justify-content:center;
   border-radius:8px;
-  background: transparent;
+  background: rgba(0, 0, 0, 0.103);
   box-shadow: none;
   border: none;
   text-align:center;
@@ -437,6 +437,7 @@ header {
     max-width: 64px;
     padding: 6px 4px;
     border-radius: 6px;
+    height: auto;
   }
 
   .brand {
@@ -456,8 +457,6 @@ header {
   .calendar-overlay .day .num { font-size: 16px; }
   .calendar-overlay .day .label { display: none; }
 
-  .calendar-overlay .day-badge,
-  .calendar-overlay .day-thumb { width: 42%; max-width: 48px; }
 
   .today-message {
     font-size: 1rem;
@@ -468,7 +467,6 @@ header {
 @media (max-width: 380px) {
   .calendar-overlay .day { width: 20%; min-width: 34px; max-width: 56px; padding: 5px; }
   .calendar-overlay { padding: 10px; }
-  .day-badge, .day-thumb { width: 40%; max-width: 44px; }
   .today-message { font-size: 0.95rem; padding: 6px 8px; }
 }
 
@@ -487,8 +485,6 @@ header {
 
   .calendar-overlay .day .num { font-size: 18px; }
   .calendar-overlay .day .label { font-size: 11px; }
-  .calendar-overlay .day-badge,
-  .calendar-overlay .day-thumb { width: 48%; max-width: 56px; }
 }
 
 @media (orientation: landscape) and (max-width: 900px) {
