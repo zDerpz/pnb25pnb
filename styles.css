@@ -1,0 +1,376 @@
+:root {
+  --bg-100: #cf7171;
+  --bg-200: #bdbfc2;
+  --bg-300: #75bb75;
+  --card: #ffffff;
+  --accent: #75bb75;
+  --muted: #628162;
+  --glass: rgba(255, 255, 255, 0.05);
+  --radius: 10px;
+  --gap: 12px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 120%;
+  margin: 0;
+  font-family: "Inter", system-ui, sans-serif;
+  background: linear-gradient(180deg, var(--bg-200), var(--bg-300));
+  color: #628162;
+  -webkit-font-smoothing: antialiased;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+.today-message {
+  text-align: center;
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #fff;
+  margin: 10px 0 15px;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 8px 16px;
+  border-radius: 12px;
+  display: inline-block;
+}
+
+/* 2. Layout base / Tipografia */
+.site-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.03), transparent);
+  backdrop-filter: blur(3px);
+}
+
+.brand {
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.hidden {
+  display: none;
+}
+
+/* 3. Navegação / Cabeçalho */
+.main-nav {
+  display: flex;
+  gap: 8px;
+}
+
+.nav-btn {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.05);
+  padding: 8px 12px;
+  border-radius: 8px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.nav-btn:hover {
+  color: #75bb75;
+  border-color: var(--accent);
+}
+
+.nav-btn.active {
+  background: var(--accent);
+  color: #071020;
+  font-weight: 700;
+}
+
+.main-nav a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* .calendar-hero {
+  display: flex;
+  justify-content: center;
+  margin: 8px 0 18px;
+  padding: 0 12px;
+} */
+
+.calendar-image {
+  width: 100%;
+  max-width: 820px;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+  object-fit: contain;
+  display: block;
+}
+
+/* Overlay posicionado sobre a imagem do calendário */
+/* .calendar-hero {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 8px 0 18px;
+  padding: 0 12px;
+} */
+
+.calendar-hero { position: relative; display:flex; justify-content:center; align-items:center; }
+.calendar-overlay {
+  position: absolute;
+  inset: 0;                 /* preenche todo o .calendar-hero */
+  pointer-events: none;     /* os botões individuais terão pointer-events:auto */
+  box-sizing: border-box;
+  z-index: 10;
+}
+
+/* cada botão irá ser posicionado em absolute pelo JS */
+.calendar-overlay .day {
+  position: absolute;
+  transform: translate(-50%, -50%); /* centra no ponto (left,top) atribuído pelo JS */
+  pointer-events: auto;
+  width: 12%;               /* tamanho base; o JS também pode ajustar inline */
+  min-width: 48px;
+  max-width: 84px;
+  height: auto;
+  padding: 8px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  border-radius:8px;
+  background: transparent;
+  box-shadow: transparent;
+  border: transparent;
+  text-align:center;
+}
+
+/* badges dentro dos quadrados (Pai Natal / miniatura) */
+.calendar-overlay .day-badge,
+.calendar-overlay .day-thumb {
+  width: 60%;
+  max-width: 64px;
+  height: auto;
+  margin-top: 6px;
+  object-fit: contain;
+  pointer-events: none;
+  border-radius: 6px;
+}
+
+/* responsividade — em ecrãs pequenos usa 4 colunas */
+@media (max-width: 640px) {
+  .calendar-overlay {
+    grid-template-columns: repeat(4, 1fr);
+    padding: 18px;
+  }
+  .calendar-overlay .day { min-height:48px; }
+}
+
+
+/* 4. Views */
+.view {
+  max-width: 1000px;
+  margin: 20px auto;
+  padding: 16px;
+}
+
+/* 5. Controles */
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.controls input[type=number] {
+  width: 80px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.05);
+  background: transparent;
+  color: inherit;
+}
+
+.btn {
+  background: var(--accent);
+  color: #071020;
+  border: none;
+  padding: 8px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  opacity: 0.95;
+}
+
+.btn.ghost {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.05);
+  color: var(--muted);
+}
+
+/* 6. Grelha de dias */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  gap: var(--gap);
+}
+
+.day {
+  position: relative;
+  border-radius: var(--radius);
+  min-height: 90px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.day.locked {
+  cursor: default;
+}
+
+.num {
+  font-size: 22px;
+  font-weight: 800;
+  color: #fff;
+}
+
+.label {
+  font-size: 12px;
+}
+
+.lock-badge {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  font-size: 10px;
+  padding: 3px 6px;
+  border-radius: 6px;
+}
+
+/* 7. Modal de imagem */
+.image-modal {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(2,6,23,0.85);
+  padding: 20px;
+  z-index: 999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.image-modal.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-img {
+  max-width: calc(100% - 60px);
+  max-height: calc(100% - 120px);
+  border-radius: 10px;
+  object-fit: contain;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+  animation: fadeIn 0.3s ease;
+}
+
+.modal-close {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: rgba(255,255,255,0.05);
+  border: none;
+  color: var(--muted);
+  padding: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.modal-close:hover {
+  color: #fff;
+  background: var(--accent);
+}
+
+.modal-caption {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--muted);
+  font-size: 14px;
+  text-align: center;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.98); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* 8. Formulário de contacto */
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 500px;
+}
+
+.contact-form label {
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.contact-form input,
+.contact-form textarea {
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.05);
+  background: transparent;
+  color: #fff;
+}
+
+.form-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.form-status {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.day-badge,
+.day-thumb {
+  width: 60%;
+  max-width: 72px;
+  height: auto;
+  display: block;
+  object-fit: contain;
+  margin-top: 6px;
+  border-radius: 8px;
+  pointer-events: none; /* para o clique ir para o botão pai, não para a imagem */
+}
+
+/* 9. Responsividade */
+@media (max-width: 600px) {
+  .grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .site-header {
+    flex-direction: column;
+    gap: 8px;
+  }
+}

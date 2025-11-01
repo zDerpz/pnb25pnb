@@ -1,0 +1,60 @@
+<html>
+    <head>
+        <title>Calendário do Advento - Barquinho</title>
+        <link rel="stylesheet" href="styles.css">
+        <script src="script.js"></script>
+    </head>
+    <body>
+        <header class="site-header">
+            <div class="brand">Calendário do Advento - Barquinho</div>
+            <nav class="main-nav">
+                <a href="index.html" data-view="calendar" class="nav-btn active">Calendário</a>
+                <a href="sobre.html" data-view="about" class="nav-btn">Sobre</a>
+                <a href="feedback.html" data-view="feedback" class="nav-btn">Feedback</a>
+            </nav>
+        </header>
+
+        <main id="app">
+        <section id="view-calendar" class="view">
+            <div class="calendar-hero">
+                <img id="calendarImage" class="calendar-image" src="res/calendairo.png">
+                <div id="calendarOverlay" class="calendar-overlay"></div>
+            </div>
+            <div class="controls">
+                <label for="testDay">Modo teste (dez):</label>
+                <input id="testDay" type="number" min="0" max="31" placeholder="0">
+                <button id="applyTest" onclick="applyTest()" class="btn">Aplicar</button>
+                <button id="resetTest" onclick="resetTest()" class="btn ghost">Reset</button>
+            </div>
+        </section>
+
+
+        <section id="view-about" class="view hidden">
+            <h2>Sobre</h2>
+            <p>Este é um Calendário do Advento simples: cada dia de dezembro desbloqueia uma foto. Clique nos dias desbloqueados para ver a imagem em ecrã inteiro.</p>
+            <p>Personalize as imagens editando os ficheiros dentro da pasta <code>res/</code>.</p>
+        </section>
+
+
+        <section id="view-contact" class="view hidden">
+            <h2>Contacto</h2>
+            <form id="contactForm" class="contact-form">
+                <label>Nome<input type="text" name="name" required></label>
+                <label>Email<input type="email" name="email" required></label>
+                <label>Mensagem<textarea name="message" rows="5" required></textarea></label>
+                <div class="form-actions">
+                    <button type="submit" class="btn">Enviar</button>
+                </div>
+                <div id="formStatus" class="form-status" aria-live="polite"></div>
+            </form>
+        </section>
+        </main>
+
+
+        <div id="imageModal" class="image-modal" aria-hidden="true" role="dialog" tabindex="-1">
+            <button id="closeModal" class="modal-close" aria-label="Fechar">✕</button>
+            <img id="modalImg" class="modal-img" alt="Foto do dia" src="">
+            <div id="modalCaption" class="modal-caption"></div>
+        </div>
+        </body>
+</html>
