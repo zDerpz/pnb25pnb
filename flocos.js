@@ -5,8 +5,8 @@
 (function () {
   'use strict';
 
-  const MAX_FLAKES_DESKTOP = 28;
-  const MAX_FLAKES_MOBILE = 12;
+  const MAX_FLAKES_DESKTOP = 100;
+  const MAX_FLAKES_MOBILE = 100;
   const FLAKE_CHARS = ['❅','❆'];
 
   let container = null;
