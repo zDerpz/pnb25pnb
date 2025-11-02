@@ -379,7 +379,7 @@ button {
   height: 80px;
   }
   html, body {
-    height: 100%;
+    height: 110%;
   }
 
   section {
@@ -391,3 +391,4 @@ button {
     }
 
 }
+
