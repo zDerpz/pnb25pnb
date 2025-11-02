@@ -379,7 +379,7 @@ button {
   height: 80px;
   }
   html, body {
-    height: 110%;
+    height: 100%;
   }
 
   section {
@@ -389,6 +389,4 @@ button {
         box-sizing: border-box;
         overflow-wrap: break-word;
     }
-
 }
-
