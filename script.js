@@ -186,12 +186,13 @@
 })();
 
 function sendEmail() {
-  alert("Enviado com sucesso")
+  alert("Enviado com sucesso");
   let params = {
     name: document.getElementById('name').value,
     email: document.getElementById('email').value,
     message: document.getElementById('message').value,
   }
-  emailjs.send('service_2ivr7s8', 'template_c0s1rvm', params)
+  emailjs.send('service_2ivr7s8', 'template_c0s1rvm', params);
 }
+
 
