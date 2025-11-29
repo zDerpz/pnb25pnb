@@ -186,7 +186,6 @@
 })();
 
 function sendEmail() {
-  alert("Enviado com sucesso")
   let params = {
     name: document.getElementById('name').value,
     email: document.getElementById('email').value,
@@ -194,5 +193,6 @@ function sendEmail() {
   }
   emailjs.send('service_jixrpki', 'template_c0s1rvm', params)
 }
+
 
 
