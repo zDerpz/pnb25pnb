@@ -16,6 +16,20 @@
                 });
             })();
         </script>
+        <script type="text/javascript">
+        window.onload = function() {
+            document.getElementById('contact').addEventListener('submit', function(event) {
+                event.preventDefault();
+                // these IDs from the previous steps
+                emailjs.sendForm('service_2ivr7s8', 'template_c0s1rvm', this)
+                    .then(() => {
+                        console.log('Feedback enviado com sucesso');
+                    }, (error) => {
+                        console.log('Erro: ', error);
+                    });
+            });
+        }
+    </script>
     </head>
     <body class="dois">
         <header class="site-header">
@@ -39,8 +53,9 @@
                 <label for="message" class="forml">Feedback:</label>
                 <input type="text" id="message" name="message" placeholder="O seu feedback" autocomplete="off" required>
                 <br>
-                <button type="submit" onclick="sendEmail()">Enviar</button>
+                <button type="submit" value="Send">Enviar</button>
             </form>
         </section>
     </body>
 </html>
+
